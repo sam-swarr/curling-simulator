@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Ice
+  m_Shader: {fileID: -6465566751694194690, guid: a17bd65c3c3afe642a9f101ab4c9dea1, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 2
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _IceTexture:
+        m_Texture: {fileID: 2800000, guid: 30a2e60094f32a3498f9a7f20d0af457, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalFromTexture_5fb890b0c7f94aa6880ddc37194f39be_Texture_0:
+        m_Texture: {fileID: 2800000, guid: 30a2e60094f32a3498f9a7f20d0af457, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalFromTexture_845771a27c4a4b07a1a35bc7d2f2e3ae_Texture_0:
+        m_Texture: {fileID: 2800000, guid: 30a2e60094f32a3498f9a7f20d0af457, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_34de4a52f41f450c8f718f49e4ef7cd9_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 9dd897cf22f30c742a51061caf00be04, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_cdaa378cbea4441d94079ecb88f4bff4_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 30a2e60094f32a3498f9a7f20d0af457, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Enable_Fresnel: 1
+    - _FresnelPower: 100
+    - _IceBlend: 0.348
+    - _Metallic: 0
+    - _Normal: 0.43
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _RefactionNormalStrength: 1
+    - _RefractionAmount: 0.01
+    - _Smoothness: 0.135
+    m_Colors:
+    - _FresnelColor: {r: 0.56731933, g: 0.809886, b: 0.9056604, a: 0}
+    - _IceColor: {r: 0.8962264, g: 0.8962264, b: 0.8962264, a: 1}
+    - _IceTiling: {r: 5, g: 50, b: 0, a: 0}
+  m_BuildTextureStacks: []
+--- !u!114 &8305401763467489750
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5

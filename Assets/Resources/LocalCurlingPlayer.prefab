@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6634117046674007933
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1346513044298741129}
+  - component: {fileID: 8617156544678735564}
+  m_Layer: 0
+  m_Name: LocalCurlingPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1346513044298741129
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6634117046674007933}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8617156544678735564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6634117046674007933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 450a3e2d3c207fa428b87a9610559cd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <PlayerColor>k__BackingField: 0
+  PlayerID: 
+  PlayerName: 
+  <AimingBroom>k__BackingField: {fileID: 0}
+  <CurrentCamera>k__BackingField: {fileID: 0}
+  ShootingCamera: {fileID: 0}
+  MovingStoneCamera: {fileID: 0}
+  OverheadCamera: {fileID: 0}
+  localAimingBroomPrefab: {fileID: 4383057934055716561, guid: fbd52b24cf922bd44b0dfec6e85b509f, type: 3}

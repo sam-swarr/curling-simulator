@@ -1,0 +1,277 @@
+BUGS:
+  - UI buttons don't seem to scale as expected on retina display
+  - for some reason meter UI disappears after screen scales to a certain width...
+  - click doesn't go through if you click on power meter
+
+NETWORKING FRAMEWORKS:
+  - SmartFox
+  - Riptide Networking
+
+- Fmod (sound framework)
+
+- naughty attributes
+
+
+Performance Optimizations:
+  - reduce binary size: https://www.youtube.com/watch?v=j0DN9P8e7dc&list=PLqz3BWdX03ouCyfECvRyr31ThBdE2OrNX&index=20&t=186s
+    - look at build report to see the biggest assets and make sure they are optimally compressed
+
+  - https://docs.unity3d.com/Manual/webgl-performance.html
+  - https://blog.unity.com/technology/understanding-memory-in-unity-webgl
+  - https://medium.com/@kongregate/unity-webgl-memory-and-performance-optimization-3939780a7e97
+
+
+TODO:
+- implement local multiplayer (y)
+  - in local mode, CurlingPlayerSpawner will spawn both player instances
+
+  - fiddled around with network transform classic vs new one and tuning parameters
+    - seems like the new one is better; can sometimes get smoother interpolation with classic but it's not as robust (e.g. freezing a client for a bit causes stone to get out of sync)
+    - test out web gl build to see how sync looks using those clients
+       - https://play.unity.com/mg/other/4-13-22-h
+          - default network transform seems to work pretty well (at least on my pc)
+          - maybe just look into snapshot interpolation later on as a bonus
+    - maybe look into custom transform synchronization (see if i can implement the snapshot interpolation that mirror uses?)
+      - https://mirror-networking.gitbook.io/docs/components/network-transform/snapshot-interpolation
+         ** ended up making custom snapshot interpolation implementation using Mirror's generic library functions
+
+  - make aiming broom disappear when switching to moving camera (y)
+  - port over sweeping logic (y)
+  - should be pretty much at parity with what i had before at this point
+    - check for any missing functionality that wasn't ported yet and clean up old code (y)
+
+- implement free guard zone rules
+
+- revamp power meter layout
+
+- revamp curl direction button
+  - have arrows that wrap around stone
+  - maybe just have it be a toggle between clockwise turn and ccw turn rather than have it "smartly" flip between the two when you cross center line
+
+- detect end of end and score points
+  - score points logic is written
+  - pan to a view over the house and display the scoring for the end (dialog?)
+    - keep track of score, update scoreboard, and switch to next end
+    - camera now pans over house at the end of end
+      - after pan, it should display a dialog summarizing results and have a ready button for next end
+      - when both players are ready, master client can set game state to next end
+        - replace the active player dot with a checkmark that enables when player clicks the ready for next end button
+  - add logic and tests for computing total score over multiple ends and which team has hammer
+
+- implement scoreboard
+
+- add interstitial state between end of last shot and beginning of next
+  - right now, it's too easy to accidentally click and place the broom for the next shot since previous shot
+  ends so abruptly
+  - good option might be to keep camera at far end so you can see the results of the last shot
+     - player then clicks a button to move to next shot
+     - maybe even let player look around
+  - try having camera pause for a second or two after shot ends, then transition back to shooting
+    - before next shot, active player needs to click through a dialog
+
+- undo button to reset aim if you're not happy
+
+- use a dissolve shader to animate rocks going out of play (y)
+  - https://www.youtube.com/watch?v=taMp1g1pBeE
+
+- make sweeping area more obvious
+  - maybe overlay a translucent UI element that corresponds with sweeping hitbox that says "Sweep" in it
+
+- make broom sweep animation and aiming line animation independent of framerate (y)
+  - already uses Time.deltaTime
+
+- right now, on remote client stone can appear to dissolve before it's fully out of play due to delay in snapshot interpolation
+  - consider reworking this so that remote client can somehow animate rock fully leaving play before dissolving
+    - perhaps remote client can get through the remaining buffered snapshots before it animates the dissolve
+  - ended up accomplishing this by just having both clients check for OOB in regular Update() and trigger dissolve when local position is OOB
+
+
+UI NOTES:
+
+4 main layouts you'll use:
+  - vertical group
+  - horizontal group
+  - layout element
+    - specifies how an individual element within a layout group should be laid out
+  - content size fitter
+
+with vertical/horiztonal:
+  - Child Force Expand toggle will make children expand evenly to fill available space
+  - Control Child Size will use the parent layout group and any found layout elements on the children to size the content
+
+
+Canvas Scaler
+  - setting on canvas element
+  - UI Scale Mode
+
+
+
+NETWORKING OPTIONS: https://www.youtube.com/watch?v=CuQF7hXlVyk
+
+- Client-Server Host
+  - don't need a dedicated server
+  - potentially tricky to be able to connect to each other over firewalls (NAT limitations)
+
+- Client-Server Host w/ Relay
+  - mitigate firewall / connection issues
+  - Unity Relay service in open beta
+
+Unity Matchmaker / Open Match
+  - google unity collab
+
+TODO:
+  - check out this video: https://www.youtube.com/watch?v=YTNdsvTBEcA
+  - try hosting game locally in server + 2 client mode and figure out why that doesn't work
+
+
+Gaming Service Providers:
+  - Amazon GameLift
+  - Azure Playfab
+  - Google Cloud Game Servers
+  - Epic Games Online Services
+
+- Playfab has good player authentication services
+
+Best Matchmaking services according to https://youtu.be/77vYKsXC4IE
+  - FlexMatch (part of amazon GameLift)
+  - Playfab Matchmaking (Microsoft)
+  - OpenMatch (Google)
+
+- https://www.youtube.com/watch?v=RIvEJ2LP0W0&list=PLXEG2omgKgCapAmGe20XBgd87rmxFdKhK&index=5
+  - uses Amazon Lightsail for a cheap virtual server
+
+Two potential paths:
+  - WebGL host + WebGL client connected via a Relay server
+    - unclear how easy / feasible it is to run a WebGL Host (aka Client+Server)
+       - not supported via WebSockets but WebRTC could work
+
+  - WebGL clients connected to DGS
+    - shouldn't need additional work on the networking side
+    - would need to pay for server hosting
+    - could use PlayFab matchmaking to handle finding players over internet and connecting them to a server
+
+** WebGL clients will likely have issues connecting to an Azure server since it needs a secure websocket (WSS)
+  - https://community.playfab.com/questions/21909/secure-websocket-certificate-for-custom-game-serve.html
+  - mentioned at end of https://www.youtube.com/watch?v=qXGFgJr2N0w
+  - b/c PlayFab servers have changing IPs each time, it's not possible to have a cert issued
+    - sounds like a solution is to have a reverse proxy that stays constant that then talks to the changing server
+
+** Photon PUN might be the way to go?
+  - try getting a PUN sample WebGL app running and connecting to servers before rewriting (obviously)
+
+NETWORKED SWEEPING:
+  - Start/STopSweeping calls need to be server commands
+  - instead of manually moving broom, have it automatically animate back and forth while clicked?
+    - easier to sync over network (can just have other client animate the sweep independently)
+    - more accurate since sweeping is just a binary right now and doesn't depend on speed
+
+  - maybe attach a broom child to each stone instance?
+    - on client mouseover, set it to hover
+    - on click, send cmd to server to show broom sweeping for both players
+
+TODO:
+  - both brooms spawn before one is disabled causing a flicker
+    - look at having them spawn invisibly before enabling/disabling them?
+
+NETWORKING TODO:
+- figure out best practice for where to assign authority
+  - register aiming broom should only be called once on server ideally
+  - maybe better to spawn aiming broom on server inside GSC
+    - can then immediately give current player authority
+
+- i tried having ABC call the register command on the GSC in on start client:
+
+    public override void OnStartClient()
+    {
+        _gameStateController = FindObjectOfType<GameStateController>();
+        _gameStateController.CMDRegisterAimingBroom(this);
+        _coneRenderer.enabled = false;
+        _lineRenderer.enabled = false;
+        _movingLineRenderer.enabled = false;
+    }
+
+  - problem is that there's a race condition since both ABCs OnStartClient will fire causing
+    CMDRegisterAimingBroom to execute on server, but there's no guarantee we know which player
+    is connected yet
+
+- should try having GSC explicitly register ABC once we know for sure that both players are connected
+  - currently know this when AddPLayer is called the second time
+  - general problem is that GSC is long lived (exists before game scene loads and both clients are connected)
+    - need to figure out most robust way to determine that both players are connected and ready
+
+    - was able to get it to work by calling register CMD in GSC after second player has connected
+      - needed to have [Command(requiresAuthority = false)] set though
+      - see if there's a more graceful solution here or maybe it doesn't matter that much
+        - maybe AddPlayer should be server only?
+        - can networkmanager call Commands?
+
+- alternatively, maybe it's cleaner to spawn an aiming broom for each player that they each have authority over?
+  - in Player onClientStart(), we'd do NetworkServer.Spawn(broom, connectionToClient);
+  - player would retain reference to its own broom, which means GSC can easily keep track of them since it
+    alreayd knows about players
+
+- on click, current player should send Command to server with broom position
+  - should revoke authority at this point
+
+
+
+- support switching between in turn / out turn
+  - learn more about buttons / UI / textures / sprites
+  - current arrow asset has ugly aliasing in game view (though scene view it looks fine)
+    - was able to get it looking better by enabling mip maps + trilinear filtering
+
+
+MIRROR NETWORKING:
+https://www.youtube.com/watch?v=j2so32ZlMoU&t=2s
+
+- add NetworkManager object with NetworkManager component
+  - can add NetworkManagerHUD component to get default host/join UI
+- need to associate a Player prefab in NetworkManager which will be the object spawned for each connected player
+  - needs to have NetworkIdentity component
+  - need to use NetworkBehaviour superclass rather than MonoBehaviour
+
+- add NetworkTransform component to any gameobject whose transform you want to keep synced
+  - clients default to having "Client Authority" unchecked; checking it will make it so client changes are synced
+  authoritatively to server
+
+** ideally server should be authoritative for all physics and just sync transforms of rocks to each client
+  - clients will just send inputs to server such as aim / power of shot
+
+* use ParrelSync package to easily run multiple editors locally to test multiplayer changes
+
+MATCHMAKING:
+  - Network Room component might be sufficient: https://mirror-networking.gitbook.io/docs/components/network-room-manager
+  - PlayFab matchmaking service: https://forum.unity.com/threads/question-on-mirror-unity-network-integration.896309/
+    - https://docs.microsoft.com/en-us/gaming/playfab/features/multiplayer/matchmaking/
+  - Unity Multiplay: https://unity.com/products/multiplay
+
+
+ISSUE WITH WEBGL BUILD NOT WORKING (Unsupported protocol: file error when trying to connect to PUN server)
+- https://forum.photonengine.com/discussion/19680/webgl-on-macos-breaks-team-alert
+  - remove Library / obj folders, reopen project in WebGL build; rebuild for WegGL
+
+- 4.13 version of game works
+  - seems like there's another error happening before the other one: Recursive Serialization is not supported. You can't dereference a PPtr while loading.
+  - probably need to figure out why that one is happening; could be related to the other one
+    - regression happened once i started depending on Mirror for the SI library...
+      - see if pulling that code out and dropping dependency on Mirror helps
+      - didnt' seem to have an effect
+
+- trying now to do dev build with full stacktraces to see if i can get a hint at which code is causing the issue
+
+4.15.22.13.framework.js:3519 Recursive Serialization is not supported. You can't dereference a PPtr while loading. (Constructors of C# classes may not load objects either. See stacktrace.)
+UnityEngine.ResourcesAPIInternal:Load(String, Type)
+UnityEngine.ResourcesAPI:Load(String, Type)
+UnityEngine.Resources:Load(String, Type)
+Photon.Pun.PhotonNetwork:LoadOrCreateSettings(Boolean)
+Photon.Pun.PhotonNetwork:get_PhotonServerSettings()
+Photon.Pun.PhotonNetwork:StaticReset()
+Photon.Pun.PhotonNetwork:.cctor()
+CurlingStoneController:.ctor()
+
+[./Runtime/Serialize/PersistentManager.cpp line 4293596
+
+- seems like CurlingStoneController's constructor is calling into PUN code which eventually uses Resources:Load
+- commenting out all the new CSC code added since 4/13 got rid of the issue
+  - current theory is that it's the reference to PhotonNetwork.SerializationRate in the def of sendInterval
+  *** that seems to have been the issue! what a saga

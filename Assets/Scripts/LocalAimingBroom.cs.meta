@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 3b40921a0e24e734d94662300650326a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _overheadHouseCamera: {instanceID: 0}
+  - _stoneSpawnLocation: {instanceID: 0}
+  - _coneRenderer: {instanceID: 0}
+  - _lineRenderer: {instanceID: 0}
+  - _movingLineRenderer: {instanceID: 0}
+  - _movingLineEndpoint: {instanceID: 0}
+  - _coneMaterialRed: {fileID: 2100000, guid: 9c873e41d2adefc438806b00926fd03d, type: 2}
+  - _coneMaterialBlue: {fileID: 2100000, guid: 111a78020b39a0c4dbdb023145aadf95, type: 2}
+  - _lineMaterialRed: {fileID: 2100000, guid: 08453bd1d579ed04999d63a00ef4b544, type: 2}
+  - _lineMaterialBlue: {fileID: 2100000, guid: 7120cb304f309344382418fc7f9443a8, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
